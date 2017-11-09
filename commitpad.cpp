@@ -1,5 +1,6 @@
 #include "commitpad.h"
 #include "ui_commitpad.h"
+#include "commitsyntaxhighlighter.h"
 
 #include <QTextStream>
 
@@ -24,6 +25,8 @@ CommitPad::CommitPad(QWidget *parent) :
   ui->cancelButton->setDefaultAction( cancelAction );
 
   connect( cancelAction, SIGNAL( triggered() ), SLOT( cancel() ) );
+
+  new CommitSyntaxHighlighter( ui->editor->document() );
 
   QStringList args( QApplication::instance()->arguments() );
   args.takeFirst();

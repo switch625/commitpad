@@ -26,11 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         commitpad.cpp \
-    titlebar.cpp
+    titlebar.cpp \
+    commitsyntaxhighlighter.cpp
 
 HEADERS += \
         commitpad.h \
-    titlebar.h
+    titlebar.h \
+    commitsyntaxhighlighter.h
 
 FORMS += \
         commitpad.ui
