@@ -3,6 +3,7 @@
 #include "commitsyntaxhighlighter.h"
 
 #include <QTextStream>
+#include <QSignalMapper>
 
 CommitPad::CommitPad(QWidget *parent) :
     QMainWindow(parent),
@@ -54,6 +55,56 @@ void CommitPad::loadFile( const QString &filename )
   if( f.open( QIODevice::ReadOnly ) )
   {
     ui->editor->setPlainText( QString( f.readAll() ) );
+    updateToolBar();
+  }
+}
+
+void CommitPad::updateToolBar()
+{
+  QRegExp rx(CommitSyntaxHighlighter::jiraIssueKeySearchExpression());
+
+  ui->insertLabel->setVisible( false );
+  while( ui->toolBar->actions().count() )
+  {
+    delete ui->toolBar->actions().first();
+  }
+  delete ui->toolBar->findChild< QSignalMapper * >();
+
+  int pos = 0;
+  QString text( ui->editor->toPlainText() );
+  QStringList jiraIssueKeys;
+  while( ( pos = rx.indexIn( text, pos ) ) != -1 )
+  {
+    if( !jiraIssueKeys.contains( rx.capturedTexts().first() ) )
+    {
+      jiraIssueKeys.append( rx.capturedTexts().first() );
+      ui->insertLabel->setVisible( true );
+    }
+    pos += rx.matchedLength();
+  }
+
+  QSignalMapper *keyMapper = new QSignalMapper( ui->toolBar );
+  connect( keyMapper, SIGNAL( mapped( QString ) ), SLOT( onInsertJiraKey( QString ) ) );
+  for( int keyIndex = 0; keyIndex < jiraIssueKeys.count(); ++keyIndex )
+  {
+    const QString &jiraIssueKey = jiraIssueKeys.at( keyIndex );
+
+    QString keySequence;
+    if( keyIndex < 8 )
+      keySequence = QString( "Alt+%1" ).arg( keyIndex + 1 );
+
+    QString buttonText = jiraIssueKey;
+    if( !keySequence.isEmpty() )
+    {
+      buttonText += QString( " (%1)" ).arg( keySequence );
+    }
+
+    QAction *keyAction = new QAction( buttonText, ui->toolBar );
+    keyAction->setShortcut( QKeySequence( keySequence ) );
+
+    ui->toolBar->addAction( keyAction );
+    keyMapper->setMapping( keyAction, jiraIssueKey );
+    connect( keyAction, SIGNAL( triggered() ), keyMapper, SLOT( map() ) );
   }
 }
 
@@ -85,4 +136,9 @@ void CommitPad::cancel()
   {
     emit warningMsg( tr( "Could not open file for writing" ) );
   }
+}
+
+void CommitPad::onInsertJiraKey( const QString &key )
+{
+  ui->editor->insertPlainText( key + ": " );
 }

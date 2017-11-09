@@ -13,6 +13,8 @@ class CommitSyntaxHighlighter : public QSyntaxHighlighter
 public:
   CommitSyntaxHighlighter( QTextDocument *parent = nullptr );
 
+  static QString jiraIssueKeySearchExpression() { return m_jiraKeySearchExpression; }
+
 protected:
   void highlightBlock(const QString &text) override;
 
@@ -33,6 +35,8 @@ private:
   QTextCharFormat m_modifiedFileFormat;
   QTextCharFormat m_removedFileFormat;
   QTextCharFormat m_jiraIssueFormat;
+
+  static const QString m_jiraKeySearchExpression;
 };
 
 #endif // COMMITSYNTAXHIGHLIGHTER_H

@@ -17,10 +17,13 @@ public:
 
 protected:
     void loadFile( const QString &filename );
+    void updateToolBar();
 
 protected slots:
     void commit();
     void cancel();
+
+    void onInsertJiraKey( const QString &key );
 
 signals:
     void warningMsg( const QString &warning );

@@ -1,5 +1,7 @@
 #include "commitsyntaxhighlighter.h"
 
+const QString CommitSyntaxHighlighter::m_jiraKeySearchExpression( "[A-Z]{1,10}\\-[0-9]{1,6}" );
+
 CommitSyntaxHighlighter::CommitSyntaxHighlighter(QTextDocument *parent)
   : QSyntaxHighlighter( parent )
 {
@@ -11,7 +13,7 @@ CommitSyntaxHighlighter::CommitSyntaxHighlighter(QTextDocument *parent)
   patterns.clear();
 
   m_jiraIssueFormat.setFontUnderline( true );
-  patterns << "[A-Z]{1,10}\\-[0-9]{1,6}";
+  patterns << m_jiraKeySearchExpression;
   addRule( patterns, m_jiraIssueFormat );
   patterns.clear();
 
