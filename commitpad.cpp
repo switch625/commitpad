@@ -4,12 +4,15 @@
 
 #include <QTextStream>
 #include <QSignalMapper>
+#include <QFileInfo>
 
 CommitPad::CommitPad(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::CommitPad)
 {
   ui->setupUi(this);
+
+  m_commitMessageFilenames << "COMMIT_EDITMSG" << "git-rebase-todo";
 
   setWindowFlags( Qt::Widget | Qt::FramelessWindowHint );
 
@@ -25,7 +28,7 @@ CommitPad::CommitPad(QWidget *parent) :
   cancelAction->setShortcut( QKeySequence( "Esc" ) );
   ui->cancelButton->setDefaultAction( cancelAction );
 
-  connect( cancelAction, SIGNAL( triggered() ), SLOT( cancel() ) );
+  connect( cancelAction, SIGNAL( triggered() ), SLOT( close() ) );
 
   new CommitSyntaxHighlighter( ui->editor->document() );
 
@@ -38,6 +41,8 @@ CommitPad::CommitPad(QWidget *parent) :
       if( QFile::exists( arg ) )
       {
         loadFile( arg );
+        ui->titleBar->setTitle( QString( "%1 - CommitPad" ).arg( QFileInfo( arg ).fileName() ) );
+        break;
       }
     }
   }
@@ -108,6 +113,29 @@ void CommitPad::updateToolBar()
   }
 }
 
+void CommitPad::closeEvent( QCloseEvent *e )
+{
+  if( m_commitMessageFilenames.contains( QFileInfo( m_filename ).fileName() ) )
+  {
+    QFile f( m_filename );
+    if( f.open( QIODevice::WriteOnly | QIODevice::Truncate ) )
+    {
+      f.close();
+      e->accept();
+    }
+    else
+    {
+      emit warningMsg( tr( "Could not open file for writing" ) );
+      e->ignore();
+    }
+  }
+  else
+  {
+    // just close
+    e->accept();
+  }
+}
+
 void CommitPad::commit()
 {
   QFile f( m_filename );
@@ -116,20 +144,7 @@ void CommitPad::commit()
     QTextStream s( &f );
     s << ui->editor->toPlainText();
     f.close();
-    close();
-  }
-  else
-  {
-    emit warningMsg( tr( "Could not open file for writing" ) );
-  }
-}
-
-void CommitPad::cancel()
-{
-  QFile f( m_filename );
-  if( f.open( QIODevice::WriteOnly | QIODevice::Truncate ) )
-  {
-    f.close();
+    m_filename.clear();
     close();
   }
   else

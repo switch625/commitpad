@@ -2,6 +2,7 @@
 #define COMMITPAD_H
 
 #include <QMainWindow>
+#include <QSet>
 
 namespace Ui {
 class CommitPad;
@@ -19,10 +20,10 @@ protected:
     void loadFile( const QString &filename );
     void updateToolBar();
 
+    void closeEvent( QCloseEvent *event );
+
 protected slots:
     void commit();
-    void cancel();
-
     void onInsertJiraKey( const QString &key );
 
 signals:
@@ -31,6 +32,7 @@ signals:
 private:
     Ui::CommitPad *ui;
     QString m_filename;
+    QSet< QString > m_commitMessageFilenames;
 };
 
 #endif // COMMITPAD_H
