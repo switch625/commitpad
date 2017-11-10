@@ -29,6 +29,7 @@ CommitPad::CommitPad(QWidget *parent) :
   ui->cancelButton->setDefaultAction( cancelAction );
 
   connect( cancelAction, SIGNAL( triggered() ), SLOT( close() ) );
+  connect( this, SIGNAL( warningMsg( QString ) ), ui->statusBar, SLOT( showMessage( QString ) ) );
 
   new CommitSyntaxHighlighter( ui->editor->document() );
 
