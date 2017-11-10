@@ -12,7 +12,8 @@ CommitSyntaxHighlighter::CommitSyntaxHighlighter(QTextDocument *parent)
   addRule( patterns, m_commentLineFormat );
   patterns.clear();
 
-  m_jiraIssueFormat.setFontUnderline( true );
+  m_jiraIssueFormat.setForeground( QColor( 0xafffff ) );
+  m_jiraIssueFormat.setFontWeight( QFont::Medium );
   patterns << m_jiraKeySearchExpression;
   addRule( patterns, m_jiraIssueFormat );
   patterns.clear();
