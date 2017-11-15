@@ -20,6 +20,7 @@ protected:
     void loadFile( const QString &filename );
     void updateToolBar();
 
+    void showEvent( QShowEvent *event );
     void closeEvent( QCloseEvent *event );
 
 protected slots:

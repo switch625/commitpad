@@ -6,6 +6,7 @@
 #include <QSignalMapper>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QShowEvent>
 
 CommitPad::CommitPad(QWidget *parent) :
     QMainWindow(parent),
@@ -118,7 +119,16 @@ void CommitPad::updateToolBar()
   }
 }
 
-void CommitPad::closeEvent( QCloseEvent *e )
+void CommitPad::showEvent( QShowEvent *event )
+{
+  if( !event->spontaneous() )
+  {
+    activateWindow();
+    ui->editor->setFocus();
+  }
+}
+
+void CommitPad::closeEvent( QCloseEvent *event )
 {
   if( m_result == Undefined && !m_filename.isEmpty() )
   {
@@ -133,7 +143,7 @@ void CommitPad::closeEvent( QCloseEvent *e )
       break;
     case QMessageBox::Cancel:
     default:
-      e->ignore();
+      event->ignore();
       return;
     }
   }
@@ -141,7 +151,7 @@ void CommitPad::closeEvent( QCloseEvent *e )
   if( m_filename.isEmpty() || ( !m_commitMessageFilenames.contains( QFileInfo( m_filename ).fileName() ) && m_result == Reject ) )
   {
     // just close
-    e->accept();
+    event->accept();
   }
   else
   {
@@ -154,12 +164,12 @@ void CommitPad::closeEvent( QCloseEvent *e )
         s << ui->editor->toPlainText();
       }
       f.close();
-      e->accept();
+      event->accept();
     }
     else
     {
       emit warningMsg( tr( "Could not open file for writing" ) );
-      e->ignore();
+      event->ignore();
     }
   }
 }
