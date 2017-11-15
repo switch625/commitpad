@@ -24,13 +24,21 @@ protected:
 
 protected slots:
     void commit();
+    void cancel();
     void onInsertJiraKey( const QString &key );
 
 signals:
     void warningMsg( const QString &warning );
 
 private:
+    enum Result
+    {
+      Undefined,
+      Accept,
+      Reject
+    };
     Ui::CommitPad *ui;
+    Result m_result;
     QString m_filename;
     QSet< QString > m_commitMessageFilenames;
 };

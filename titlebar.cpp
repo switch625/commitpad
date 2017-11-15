@@ -3,6 +3,7 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QMouseEvent>
+#include <QToolButton>
 
 TitleBar::TitleBar(QWidget *parent)
   : QFrame(parent)
@@ -12,6 +13,11 @@ TitleBar::TitleBar(QWidget *parent)
   setLayout( layout );
   m_titleLabel = new QLabel( this );
   layout->addWidget( m_titleLabel );
+  QToolButton *closeButton = new QToolButton( this );
+  closeButton->setText( "x" );
+  closeButton->setAutoRaise( true );
+  layout->addWidget( closeButton );
+  connect( closeButton, SIGNAL( clicked() ), window(), SLOT( close() ) );
   setStyleSheet( "background-color:#232343;color:#ffffff");
 }
 

@@ -5,12 +5,16 @@
 #include <QTextStream>
 #include <QSignalMapper>
 #include <QFileInfo>
+#include <QMessageBox>
 
 CommitPad::CommitPad(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::CommitPad)
 {
   ui->setupUi(this);
+  ui->insertLabel->setVisible( false );
+
+  m_result = Undefined;
 
   m_commitMessageFilenames << "COMMIT_EDITMSG" << "git-rebase-todo";
 
@@ -28,7 +32,7 @@ CommitPad::CommitPad(QWidget *parent) :
   cancelAction->setShortcut( QKeySequence( "Esc" ) );
   ui->cancelButton->setDefaultAction( cancelAction );
 
-  connect( cancelAction, SIGNAL( triggered() ), SLOT( close() ) );
+  connect( cancelAction, SIGNAL( triggered() ), SLOT( cancel() ) );
   connect( this, SIGNAL( warningMsg( QString ) ), ui->statusBar, SLOT( showMessage( QString ) ) );
 
   new CommitSyntaxHighlighter( ui->editor->document() );
@@ -116,11 +120,39 @@ void CommitPad::updateToolBar()
 
 void CommitPad::closeEvent( QCloseEvent *e )
 {
-  if( m_commitMessageFilenames.contains( QFileInfo( m_filename ).fileName() ) )
+  if( m_result == Undefined && !m_filename.isEmpty() )
+  {
+    QMessageBox::StandardButton response = QMessageBox::question( this, "CommitPad", tr( "Commit?" ), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, QMessageBox::Cancel );
+    switch( response )
+    {
+    case QMessageBox::Yes:
+      m_result = Accept;
+      break;
+    case QMessageBox::No:
+      m_result = Reject;
+      break;
+    case QMessageBox::Cancel:
+    default:
+      e->ignore();
+      return;
+    }
+  }
+
+  if( m_filename.isEmpty() || ( !m_commitMessageFilenames.contains( QFileInfo( m_filename ).fileName() ) && m_result == Reject ) )
+  {
+    // just close
+    e->accept();
+  }
+  else
   {
     QFile f( m_filename );
     if( f.open( QIODevice::WriteOnly | QIODevice::Truncate ) )
     {
+      if( m_result == Accept )
+      {
+        QTextStream s( &f );
+        s << ui->editor->toPlainText();
+      }
       f.close();
       e->accept();
     }
@@ -130,28 +162,17 @@ void CommitPad::closeEvent( QCloseEvent *e )
       e->ignore();
     }
   }
-  else
-  {
-    // just close
-    e->accept();
-  }
 }
 
 void CommitPad::commit()
 {
-  QFile f( m_filename );
-  if( f.open( QIODevice::WriteOnly | QIODevice::Truncate ) )
-  {
-    QTextStream s( &f );
-    s << ui->editor->toPlainText();
-    f.close();
-    m_filename.clear();
-    close();
-  }
-  else
-  {
-    emit warningMsg( tr( "Could not open file for writing" ) );
-  }
+  m_result = Accept;
+  close();
+}
+void CommitPad::cancel()
+{
+  m_result = Reject;
+  close();
 }
 
 void CommitPad::onInsertJiraKey( const QString &key )
