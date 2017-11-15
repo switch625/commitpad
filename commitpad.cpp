@@ -123,6 +123,15 @@ void CommitPad::updateToolBar()
     keyMapper->setMapping( keyAction, jiraIssueKey );
     connect( keyAction, SIGNAL( triggered() ), keyMapper, SLOT( map() ) );
   }
+
+  if( !jiraIssueKeys.isEmpty() && m_settings.value( SettingsDialog::autofillIssueSettingsKey() ).toBool() == true )
+  {
+    if( ui->editor->toPlainText().isEmpty() || ui->editor->toPlainText().startsWith( "\n" ) )
+    {
+      QString insertText = jiraIssueKeys.first() + ": ";
+      ui->editor->insertPlainText( insertText );
+    }
+  }
 }
 
 void CommitPad::showEvent( QShowEvent *event )

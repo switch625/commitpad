@@ -16,6 +16,8 @@ public:
   explicit SettingsDialog( QSettings &settings, QWidget *parent = 0);
   ~SettingsDialog();
 
+  inline static QString autofillIssueSettingsKey() { return "autofillIssueNumber"; }
+
 public slots:
   void accept();
 

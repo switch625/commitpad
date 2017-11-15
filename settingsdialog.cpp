@@ -30,15 +30,15 @@ void SettingsDialog::showEvent(QShowEvent *event)
 
 void SettingsDialog::readSettings()
 {
-  ui->autofillIssueNumberCheckBox->setChecked( m_settings.value( "autofillIssueNumber" ).toBool() );
+  ui->autofillIssueNumberCheckBox->setChecked( m_settings.value( autofillIssueSettingsKey() ).toBool() );
 }
 
 void SettingsDialog::writeSettings() const
 {
-  if( m_settings.value( "autofillIssueNumber" ).toBool() != ui->autofillIssueNumberCheckBox->isChecked() )
+  if( m_settings.value( autofillIssueSettingsKey() ).toBool() != ui->autofillIssueNumberCheckBox->isChecked() )
   {
     QVariant v;
     v.setValue< bool >( ui->autofillIssueNumberCheckBox->isChecked() );
-    m_settings.setValue( "autofillIssueNumber", v );
+    m_settings.setValue( autofillIssueSettingsKey(), v );
   }
 }
