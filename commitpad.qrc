@@ -1,6 +1,7 @@
 <RCC>
-    <qresource prefix="icons">
-      <file alias="commit">Resources/commit.svg</file>
-      <file alias="cancel">Resources/cancel.svg</file>
+    <qresource prefix="/icons">
+        <file alias="commit">Resources/commit.svg</file>
+        <file alias="cancel">Resources/cancel.svg</file>
+        <file alias="settings">Resources/settings.svg</file>
     </qresource>
 </RCC>

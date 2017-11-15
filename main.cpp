@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
   QApplication a(argc, argv);
   QSettings settings( "CommitPad" );
 
-  CommitPad w;
+  CommitPad w( settings );
 
   if( settings.contains( "WindowPosition" ) )
   {

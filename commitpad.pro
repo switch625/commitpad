@@ -27,15 +27,18 @@ SOURCES += \
         main.cpp \
         commitpad.cpp \
     titlebar.cpp \
-    commitsyntaxhighlighter.cpp
+    commitsyntaxhighlighter.cpp \
+    settingsdialog.cpp
 
 HEADERS += \
         commitpad.h \
     titlebar.h \
-    commitsyntaxhighlighter.h
+    commitsyntaxhighlighter.h \
+    settingsdialog.h
 
 FORMS += \
-        commitpad.ui
+        commitpad.ui \
+    settingsdialog.ui
 
 RESOURCES += \
     commitpad.qrc

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QSet>
+#include <QSettings>
 
 namespace Ui {
 class CommitPad;
@@ -13,7 +14,7 @@ class CommitPad : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit CommitPad(QWidget *parent = 0);
+    explicit CommitPad( QSettings &settings, QWidget *parent = 0 );
     ~CommitPad();
 
 protected:
@@ -24,8 +25,9 @@ protected:
     void closeEvent( QCloseEvent *event );
 
 protected slots:
-    void commit();
-    void cancel();
+    void onCommit();
+    void onCancel();
+    void onSettingsButtonClicked();
     void onInsertJiraKey( const QString &key );
 
 signals:
@@ -38,6 +40,7 @@ private:
       Accept,
       Reject
     };
+    QSettings &m_settings;
     Ui::CommitPad *ui;
     Result m_result;
     QString m_filename;

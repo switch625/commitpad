@@ -1,6 +1,7 @@
 #include "commitpad.h"
 #include "ui_commitpad.h"
 #include "commitsyntaxhighlighter.h"
+#include "settingsdialog.h"
 
 #include <QTextStream>
 #include <QSignalMapper>
@@ -8,9 +9,10 @@
 #include <QMessageBox>
 #include <QShowEvent>
 
-CommitPad::CommitPad(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::CommitPad)
+CommitPad::CommitPad( QSettings &settings, QWidget *parent )
+  : QMainWindow(parent)
+  , m_settings( settings )
+  , ui(new Ui::CommitPad)
 {
   ui->setupUi(this);
   ui->insertLabel->setVisible( false );
@@ -27,15 +29,19 @@ CommitPad::CommitPad(QWidget *parent) :
   commitAction->setShortcut( QKeySequence( "Ctrl+Return" ) );
   ui->commitButton->setDefaultAction( commitAction );
 
-  connect( commitAction, SIGNAL( triggered() ), SLOT( commit() ) );
+  connect( commitAction, SIGNAL( triggered() ), SLOT( onCommit() ) );
 
   QAction *cancelAction = new QAction( QIcon( ":/icons/cancel" ), tr( "Cancel" ), this );
   cancelAction->setShortcut( QKeySequence( "Esc" ) );
   ui->cancelButton->setDefaultAction( cancelAction );
 
-  connect( cancelAction, SIGNAL( triggered() ), SLOT( cancel() ) );
-  connect( this, SIGNAL( warningMsg( QString ) ), ui->statusBar, SLOT( showMessage( QString ) ) );
+  connect( cancelAction, SIGNAL( triggered() ), SLOT( onCancel() ) );
 
+  QAction *settingsAction = new QAction( QIcon( ":/icons/settings" ), tr( "Settings" ), this );
+  ui->settingsButton->setDefaultAction( settingsAction);
+  connect( settingsAction, SIGNAL( triggered() ), this, SLOT( onSettingsButtonClicked() ) );
+
+  connect( this, SIGNAL( warningMsg( QString ) ), ui->statusBar, SLOT( showMessage( QString ) ) );
   new CommitSyntaxHighlighter( ui->editor->document() );
 
   QStringList args( QApplication::instance()->arguments() );
@@ -174,15 +180,22 @@ void CommitPad::closeEvent( QCloseEvent *event )
   }
 }
 
-void CommitPad::commit()
+void CommitPad::onCommit()
 {
   m_result = Accept;
   close();
 }
-void CommitPad::cancel()
+
+void CommitPad::onCancel()
 {
   m_result = Reject;
   close();
+}
+
+void CommitPad::onSettingsButtonClicked()
+{
+  SettingsDialog dlg( m_settings );
+  dlg.exec();
 }
 
 void CommitPad::onInsertJiraKey( const QString &key )
