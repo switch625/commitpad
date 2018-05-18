@@ -87,10 +87,12 @@ void CommitPad::updateToolBar()
   }
   delete ui->toolBar->findChild< QSignalMapper * >();
 
+  const int maxIssueKeys = 5; // this is the maximum number of issue keys we will display on the toolbar
+  int keyCount = 0;
   int pos = 0;
   QString text( ui->editor->toPlainText() );
   QStringList jiraIssueKeys;
-  while( ( pos = rx.indexIn( text, pos ) ) != -1 )
+  while( ( pos = rx.indexIn( text, pos ) ) != -1 && keyCount < maxIssueKeys )
   {
     if( !jiraIssueKeys.contains( rx.capturedTexts().first() ) )
     {
@@ -98,6 +100,7 @@ void CommitPad::updateToolBar()
       ui->insertLabel->setVisible( true );
     }
     pos += rx.matchedLength();
+    ++keyCount;
   }
 
   QSignalMapper *keyMapper = new QSignalMapper( ui->toolBar );
