@@ -1,2 +1,9 @@
 *.pro.user
-build
+.qmake.stash
+Makefile
+Makefile*
+object_script*
+release/
+debug/
+profile/
+ui_*.h
