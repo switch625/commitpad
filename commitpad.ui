@@ -506,7 +506,7 @@
      <widget class="QPlainTextEdit" name="editor">
       <property name="font">
        <font>
-        <family>Consolas</family>
+        <family>Fira Code Medium</family>
         <pointsize>11</pointsize>
        </font>
       </property>
