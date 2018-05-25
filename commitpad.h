@@ -24,6 +24,8 @@ protected:
     void showEvent( QShowEvent *event );
     void closeEvent( QCloseEvent *event );
 
+    QIcon generateActionIcon( const QString &iconFilename );
+
 protected slots:
     void onCommit();
     void onCancel();
@@ -44,7 +46,7 @@ private:
     Ui::CommitPad *ui;
     Result m_result;
     QString m_filename;
-    QSet< QString > m_commitMessageFilenames;
+    QHash< QString, QIcon > m_operationIcons;
 };
 
 #endif // COMMITPAD_H

@@ -8,6 +8,7 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QShowEvent>
+#include <QWinTaskbarButton>
 
 CommitPad::CommitPad( QSettings &settings, QWidget *parent )
   : QMainWindow(parent)
@@ -19,7 +20,9 @@ CommitPad::CommitPad( QSettings &settings, QWidget *parent )
 
   m_result = Undefined;
 
-  m_commitMessageFilenames << "COMMIT_EDITMSG" << "git-rebase-todo";
+  m_operationIcons.insert( "COMMIT_EDITMSG", generateActionIcon( ":/operations/git-commit" ) );
+  m_operationIcons.insert( "git-rebase-todo", generateActionIcon( ":/operations/git-branch" ) );
+  m_operationIcons.insert( "MERGE_MSG", generateActionIcon( ":/operations/git-merge" ) );
 
   setWindowFlags( Qt::Widget | Qt::FramelessWindowHint );
 
@@ -144,6 +147,14 @@ void CommitPad::showEvent( QShowEvent *event )
   {
     activateWindow();
     ui->editor->setFocus();
+
+    QString filename( QFileInfo( m_filename ).fileName() );
+    if( m_operationIcons.contains( filename ) )
+    {
+      QWinTaskbarButton *button = new QWinTaskbarButton( this );
+      button->setWindow( windowHandle() );
+      button->setOverlayIcon( m_operationIcons.value( filename ) );
+    }
   }
 }
 
@@ -167,7 +178,7 @@ void CommitPad::closeEvent( QCloseEvent *event )
     }
   }
 
-  if( m_filename.isEmpty() || ( !m_commitMessageFilenames.contains( QFileInfo( m_filename ).fileName() ) && m_result == Reject ) )
+  if( m_filename.isEmpty() || ( !m_operationIcons.uniqueKeys().contains( QFileInfo( m_filename ).fileName() ) && m_result == Reject ) )
   {
     // just close
     event->accept();
@@ -191,6 +202,12 @@ void CommitPad::closeEvent( QCloseEvent *event )
       event->ignore();
     }
   }
+}
+
+
+QIcon CommitPad::generateActionIcon( const QString &iconFilename )
+{
+  return QIcon( iconFilename );
 }
 
 void CommitPad::onCommit()
