@@ -24,6 +24,7 @@ CommitPad::CommitPad( QSettings &settings, QWidget *parent )
   setWindowFlags( Qt::Widget | Qt::FramelessWindowHint );
 
   ui->titleBar->setTitle( "CommitPad" );
+  setWindowIcon( QIcon( ":/icons/icon" ) );
 
   QAction *commitAction = new QAction( QIcon( ":/icons/commit" ), tr( "Commit" ), this );
   commitAction->setShortcut( QKeySequence( "Ctrl+Return" ) );

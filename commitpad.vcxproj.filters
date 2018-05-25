@@ -88,22 +88,12 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    
-    
-    
-    
     <CustomBuild Include="debug\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
     <CustomBuild Include="release\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
-    
-    
-    
-    
-    
-    
     <ClInclude Include="ui_commitpad.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
@@ -140,5 +130,16 @@
     <None Include="TODO">
       <Filter>Distribution Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="commitpad.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="commitpad.ico" />
   </ItemGroup>
 </Project>

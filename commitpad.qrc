@@ -3,5 +3,6 @@
         <file alias="commit">Resources/commit.svg</file>
         <file alias="cancel">Resources/cancel.svg</file>
         <file alias="settings">Resources/settings.svg</file>
+        <file alias="icon">Resources/icon.png</file>
     </qresource>
 </RCC>

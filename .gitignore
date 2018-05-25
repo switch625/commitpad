@@ -10,3 +10,4 @@ ui_*.h
 .vs/
 GeneratedFiles/
 *.vcxproj.user
+*.aps
