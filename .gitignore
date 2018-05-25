@@ -7,3 +7,6 @@ release/
 debug/
 profile/
 ui_*.h
+.vs/
+GeneratedFiles/
+*.vcxproj.user
