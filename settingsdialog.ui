@@ -31,6 +31,35 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="contentGroupBox_2">
+     <property name="title">
+      <string>History</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="commitHistorySizeLabel">
+        <property name="text">
+         <string>Commit messages to store:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="commitHistorySizeSpinBox">
+        <property name="maximum">
+         <number>500</number>
+        </property>
+        <property name="singleStep">
+         <number>5</number>
+        </property>
+        <property name="value">
+         <number>30</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>

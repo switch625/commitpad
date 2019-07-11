@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QSet>
 #include <QSettings>
+#include <QStack>
 
 namespace Ui {
 class CommitPad;
@@ -43,6 +44,7 @@ private:
       Reject
     };
     QSettings &m_settings;
+    QStack< QString > m_history;
     Ui::CommitPad *ui;
     Result m_result;
     QString m_filename;
