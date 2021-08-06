@@ -88,18 +88,24 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
+    
+    
+    
+    
     <CustomBuild Include="debug\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
     <CustomBuild Include="release\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
-    <ClInclude Include="ui_commitpad.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ui_settingsdialog.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
+    
+    
+    
+    
+    
+    
+    
+    
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="commitpad.ui">
@@ -119,6 +125,18 @@
     <QtRcc Include="commitpad.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
+    <None Include="Resources\operations\git-branch.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\operations\git-commit.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\operations\git-merge.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\icon.png">
+      <Filter>Resource Files</Filter>
+    </None>
     <None Include="Resources\settings.svg">
       <Filter>Resource Files</Filter>
     </None>
@@ -130,16 +148,5 @@
     <None Include="TODO">
       <Filter>Distribution Files</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="resource.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="commitpad.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="commitpad.ico" />
   </ItemGroup>
 </Project>
