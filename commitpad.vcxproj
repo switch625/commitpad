@@ -201,6 +201,7 @@
     </QtUic>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="commitmessagehistoryitemmodel.cpp" />
     <ClCompile Include="commitpad.cpp" />
     <ClCompile Include="commitsyntaxhighlighter.cpp" />
     <ClCompile Include="main.cpp" />
@@ -255,6 +256,10 @@
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="TODO" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="commitmessagehistorymodelinterface.h" />
+    <ClInclude Include="commitmessagehistoryitemmodel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

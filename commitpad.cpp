@@ -91,7 +91,7 @@ void CommitPad::updateToolBar()
   {
     delete ui->toolBar->actions().first();
   }
-  delete ui->toolBar->findChild< QSignalMapper * >();
+  delete ui->toolBar->findChild< QSignalMapper* >();
 
   const int maxIssueKeys = 5; // this is the maximum number of issue keys we will display on the toolbar
   int keyCount = 0;
