@@ -23,6 +23,7 @@ void CommitMessageHistoryItemModel::pushCommitMessage( const QString &message )
     QStandardItem *item = new QStandardItem( lines.first() );
     item->setData( QVariant( message ), Qt::UserRole );
     insertRow( 1, item );
+    save();
   }
 }
 
