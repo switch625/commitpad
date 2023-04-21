@@ -17,11 +17,9 @@ CommitMessageHistoryItemModel::~CommitMessageHistoryItemModel()
 
 void CommitMessageHistoryItemModel::pushCommitMessage( const QString &message )
 {
-  QStringList lines( message.split( "\n" ) );
-  if( !lines.isEmpty() )
+  QStandardItem *item = createItemForMessage( message );
+  if( item != 0 )
   {
-    QStandardItem *item = new QStandardItem( lines.first() );
-    item->setData( QVariant( message ), Qt::UserRole );
     insertRow( 1, item );
     save();
   }
@@ -69,8 +67,15 @@ void CommitMessageHistoryItemModel::load( QSettings &settings )
   for( int historyIndex = 0; historyIndex < historySize && historyIndex < modelCountLimit; ++historyIndex )
   {
     settings.setArrayIndex( historyIndex );
-    QStandardItem *item = new QStandardItem( settings.value( "message" ).toString() );
-    appendRow( item );
+    QString message( settings.value( "message" ).toString() );
+    if( !message.isEmpty() )
+    {
+      QStandardItem *item = createItemForMessage( message );
+      if( item != 0 )
+      {
+        appendRow( item );
+      }
+    }
   }
   settings.endArray();
 }
@@ -87,5 +92,18 @@ void CommitMessageHistoryItemModel::save()
     }
     m_settings->endArray();
   }
+}
+
+QStandardItem *CommitMessageHistoryItemModel::createItemForMessage( const QString &message ) const
+{
+  QStandardItem *item = 0;
+  QStringList lines( message.split( "\n" ) );
+  if( !lines.isEmpty() )
+  {
+    item = new QStandardItem( lines.first().left( 120 ) );
+    item->setData( QVariant( message ), Qt::UserRole );
+  }
+
+  return item;
 }
 

@@ -36,6 +36,7 @@ public:
   void save();
 
 private:
+  QStandardItem *createItemForMessage( const QString &message ) const;
   QStandardItem *m_emptyItem;
   QPointer< QSettings > m_settings;
   static const int modelCountLimit = 25;
