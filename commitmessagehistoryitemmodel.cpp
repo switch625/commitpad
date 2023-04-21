@@ -1,15 +1,12 @@
 #include "commitmessagehistoryitemmodel.h"
 
+#include <QSettings>
+
 CommitMessageHistoryItemModel::CommitMessageHistoryItemModel( QObject *parent )
   : QStandardItemModel( parent )
   , CommitHistoryModelInterface()
 {
   clear();
-
-  pushCommitMessage( "CIP-4334: First commit message" );
-  pushCommitMessage( "CIP-4334: Second commit message" );
-  pushCommitMessage( "CIP-4334: Third commit message" );
-  pushCommitMessage( "CIP-4344: Latest commit message" );
 }
 
 CommitMessageHistoryItemModel::~CommitMessageHistoryItemModel()
@@ -42,7 +39,7 @@ QStringList CommitMessageHistoryItemModel::messageHeads( int count ) const
   QStringList heads;
 
   // ignore row 0
-  for( int rowIndex = 1; rowIndex < count && rowIndex > rowCount(); ++rowIndex )
+  for( int rowIndex = 1; rowIndex < count && rowIndex < rowCount(); ++rowIndex )
   {
     heads << item( rowIndex )->text();
   }
@@ -60,5 +57,34 @@ QString CommitMessageHistoryItemModel::message( int index ) const
   }
 
   return message;
+}
+
+void CommitMessageHistoryItemModel::load( QSettings &settings )
+{
+  clear();
+
+  m_settings = &settings;
+  int historySize = settings.beginReadArray( "history" );
+  for( int historyIndex = 0; historyIndex < historySize && historyIndex < modelCountLimit; ++historyIndex )
+  {
+    settings.setArrayIndex( historyIndex );
+    QStandardItem *item = new QStandardItem( settings.value( "message" ).toString() );
+    appendRow( item );
+  }
+  settings.endArray();
+}
+
+void CommitMessageHistoryItemModel::save()
+{
+  if( !m_settings.isNull() )
+  {
+    m_settings->beginWriteArray( "history" );
+    for( int rowIndex = 1; rowIndex <= modelCountLimit && rowIndex < rowCount(); ++rowIndex )
+    {
+      m_settings->setArrayIndex( rowIndex - 1 );
+      m_settings->setValue( "message", item( rowIndex )->data( Qt::UserRole ).toString() );
+    }
+    m_settings->endArray();
+  }
 }
 

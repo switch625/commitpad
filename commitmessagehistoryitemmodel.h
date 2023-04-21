@@ -4,6 +4,9 @@
 #include "commitmessagehistorymodelinterface.h"
 
 #include <QStandardItemModel>
+#include <QPointer>
+
+class QSettings;
  
 /**
 * Model which stores and retrieves commit messages in a QStringList
@@ -26,8 +29,16 @@ public:
   /// return the full test of the message at `index` in the model, where the most recent message is index = 0
   virtual QString message( int index ) const override;
 
+  /// loads the contents of the model from disk
+  void load( QSettings &settings );
+
+  /// save the contents of the model to disk
+  void save();
+
 private:
   QStandardItem *m_emptyItem;
+  QPointer< QSettings > m_settings;
+  static const int modelCountLimit = 25;
 };
 
 
