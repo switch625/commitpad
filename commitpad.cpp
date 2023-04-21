@@ -12,6 +12,8 @@
 #include <QWinTaskbarButton>
 #include <QStyleFactory>
 
+const QString CommitPad::m_editMessageFilename = "COMMIT_EDITMSG";
+
 CommitPad::CommitPad( QSettings &settings, QWidget *parent )
   : QMainWindow(parent)
   , m_settings( settings )
@@ -23,7 +25,7 @@ CommitPad::CommitPad( QSettings &settings, QWidget *parent )
 
   m_result = Undefined;
 
-  m_operationIcons.insert( "COMMIT_EDITMSG", generateActionIcon( ":/operations/git-commit" ) );
+  m_operationIcons.insert( m_editMessageFilename, generateActionIcon( ":/operations/git-commit" ) );
   m_operationIcons.insert( "git-rebase-todo", generateActionIcon( ":/operations/git-branch" ) );
   m_operationIcons.insert( "MERGE_MSG", generateActionIcon( ":/operations/git-merge" ) );
 
@@ -66,11 +68,21 @@ CommitPad::CommitPad( QSettings &settings, QWidget *parent )
     }
   }
 
-  CommitMessageHistoryItemModel *historyModel = new CommitMessageHistoryItemModel( this );
-  ui->historyCombo->setModel( historyModel );
-  m_history = historyModel;
+  ui->historyWidget->setVisible( false );
 
-  connect( ui->historyCombo, SIGNAL( activated( int ) ), SLOT( onComboIndexSelected( int ) ) );
+  if( m_filename == m_editMessageFilename )
+  {
+    CommitMessageHistoryItemModel *historyModel = new CommitMessageHistoryItemModel( this );
+    historyModel->load( m_settings );
+    ui->historyCombo->setModel( historyModel );
+    m_history = historyModel;
+    if( historyModel->rowCount() > 1 )
+    {
+      // there's no commit history so don't show the combo
+      ui->historyWidget->setVisible( true );
+      connect( ui->historyCombo, SIGNAL( activated( int ) ), SLOT( onComboIndexSelected( int ) ) );
+    }
+  }
 }
 
 CommitPad::~CommitPad()

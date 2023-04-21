@@ -54,6 +54,8 @@ private:
     Result m_result;
     QString m_filename;
     QHash< QString, QIcon > m_operationIcons;
+    
+    static const QString m_editMessageFilename;
 };
 
 #endif // COMMITPAD_H
