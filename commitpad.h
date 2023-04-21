@@ -43,6 +43,9 @@ private:
       Accept,
       Reject
     };
+
+    /// sets a palette suitable for the current windows theme
+    void setApplicationPalette() const;
     QSettings &m_settings;
     QStack< QString > m_history;
     Ui::CommitPad *ui;
