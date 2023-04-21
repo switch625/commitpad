@@ -70,7 +70,7 @@
     <QtModules>core;gui;widgets;winextras</QtModules>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <QtInstall>5.15.5_msvc2019</QtInstall>
+    <QtInstall>5.15.5-widgit</QtInstall>
     <QtModules>core;gui;widgets;winextras</QtModules>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
