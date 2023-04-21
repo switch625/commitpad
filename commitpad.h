@@ -4,7 +4,8 @@
 #include <QMainWindow>
 #include <QSet>
 #include <QSettings>
-#include <QStack>
+
+class CommitHistoryModelInterface;
 
 namespace Ui {
 class CommitPad;
@@ -32,6 +33,7 @@ protected slots:
     void onCancel();
     void onSettingsButtonClicked();
     void onInsertJiraKey( const QString &key );
+    void onComboIndexSelected( int comboIndex );
 
 signals:
     void warningMsg( const QString &warning );
@@ -47,7 +49,7 @@ private:
     /// sets a palette suitable for the current windows theme
     void setApplicationPalette() const;
     QSettings &m_settings;
-    QStack< QString > m_history;
+    CommitHistoryModelInterface *m_history;
     Ui::CommitPad *ui;
     Result m_result;
     QString m_filename;

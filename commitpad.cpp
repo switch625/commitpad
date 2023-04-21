@@ -2,6 +2,7 @@
 #include "ui_commitpad.h"
 #include "commitsyntaxhighlighter.h"
 #include "settingsdialog.h"
+#include "commitmessagehistoryitemmodel.h"
 
 #include <QTextStream>
 #include <QSignalMapper>
@@ -64,6 +65,12 @@ CommitPad::CommitPad( QSettings &settings, QWidget *parent )
       }
     }
   }
+
+  CommitMessageHistoryItemModel *historyModel = new CommitMessageHistoryItemModel( this );
+  ui->historyCombo->setModel( historyModel );
+  m_history = historyModel;
+
+  connect( ui->historyCombo, SIGNAL( activated( int ) ), SLOT( onComboIndexSelected( int ) ) );
 }
 
 CommitPad::~CommitPad()
@@ -194,6 +201,13 @@ void CommitPad::closeEvent( QCloseEvent *event )
       {
         QTextStream s( &f );
         s << ui->editor->toPlainText();
+
+        if( m_filename == "COMMIT_EDITMSG" )
+        {
+          QString commitMessage( ui->editor->toPlainText() );
+          commitMessage = commitMessage.left( commitMessage.indexOf( "#" ) ).trimmed(); // strip git comments and trailing whitespace
+          m_history->pushCommitMessage( commitMessage );
+        }
       }
       f.close();
       event->accept();
@@ -233,6 +247,15 @@ void CommitPad::onSettingsButtonClicked()
 void CommitPad::onInsertJiraKey( const QString &key )
 {
   ui->editor->insertPlainText( key + ": " );
+}
+
+void CommitPad::onComboIndexSelected( int comboIndex )
+{
+  // replace the message in the editor with that in the history model and reset the combo to be blank.
+  QString commitMessage = m_history->message( comboIndex );
+
+  ui->editor->setPlainText( commitMessage );
+  ui->historyCombo->setCurrentIndex( 0 );
 }
 
 void CommitPad::setApplicationPalette() const
