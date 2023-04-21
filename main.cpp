@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
   QApplication a(argc, argv);
-  QSettings settings( "CommitPad" );
+  QSettings settings( "./CommitPad.ini", QSettings::IniFormat );
 
   CommitPad w( settings );
 

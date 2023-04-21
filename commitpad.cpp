@@ -2,6 +2,7 @@
 #include "ui_commitpad.h"
 #include "commitsyntaxhighlighter.h"
 #include "settingsdialog.h"
+#include "commitmessagehistoryitemmodel.h"
 
 #include <QTextStream>
 #include <QSignalMapper>
@@ -10,6 +11,8 @@
 #include <QShowEvent>
 #include <QWinTaskbarButton>
 #include <QStyleFactory>
+
+const QString CommitPad::m_editMessageFilename = "COMMIT_EDITMSG";
 
 CommitPad::CommitPad( QSettings &settings, QWidget *parent )
   : QMainWindow(parent)
@@ -22,7 +25,7 @@ CommitPad::CommitPad( QSettings &settings, QWidget *parent )
 
   m_result = Undefined;
 
-  m_operationIcons.insert( "COMMIT_EDITMSG", generateActionIcon( ":/operations/git-commit" ) );
+  m_operationIcons.insert( m_editMessageFilename, generateActionIcon( ":/operations/git-commit" ) );
   m_operationIcons.insert( "git-rebase-todo", generateActionIcon( ":/operations/git-branch" ) );
   m_operationIcons.insert( "MERGE_MSG", generateActionIcon( ":/operations/git-merge" ) );
 
@@ -64,6 +67,22 @@ CommitPad::CommitPad( QSettings &settings, QWidget *parent )
       }
     }
   }
+
+  ui->historyWidget->setVisible( false );
+
+  if( m_filename == m_editMessageFilename )
+  {
+    CommitMessageHistoryItemModel *historyModel = new CommitMessageHistoryItemModel( this );
+    historyModel->load( m_settings );
+    ui->historyCombo->setModel( historyModel );
+    m_history = historyModel;
+    if( historyModel->rowCount() > 1 )
+    {
+      // there's no commit history so don't show the combo
+      ui->historyWidget->setVisible( true );
+      connect( ui->historyCombo, SIGNAL( activated( int ) ), SLOT( onComboIndexSelected( int ) ) );
+    }
+  }
 }
 
 CommitPad::~CommitPad()
@@ -91,7 +110,7 @@ void CommitPad::updateToolBar()
   {
     delete ui->toolBar->actions().first();
   }
-  delete ui->toolBar->findChild< QSignalMapper * >();
+  delete ui->toolBar->findChild< QSignalMapper* >();
 
   const int maxIssueKeys = 5; // this is the maximum number of issue keys we will display on the toolbar
   int keyCount = 0;
@@ -194,6 +213,13 @@ void CommitPad::closeEvent( QCloseEvent *event )
       {
         QTextStream s( &f );
         s << ui->editor->toPlainText();
+
+        if( m_filename == "COMMIT_EDITMSG" )
+        {
+          QString commitMessage( ui->editor->toPlainText() );
+          commitMessage = commitMessage.left( commitMessage.indexOf( "#" ) ).trimmed(); // strip git comments and trailing whitespace
+          m_history->pushCommitMessage( commitMessage );
+        }
       }
       f.close();
       event->accept();
@@ -233,6 +259,15 @@ void CommitPad::onSettingsButtonClicked()
 void CommitPad::onInsertJiraKey( const QString &key )
 {
   ui->editor->insertPlainText( key + ": " );
+}
+
+void CommitPad::onComboIndexSelected( int comboIndex )
+{
+  // replace the message in the editor with that in the history model and reset the combo to be blank.
+  QString commitMessage = m_history->message( comboIndex );
+
+  ui->editor->setPlainText( commitMessage );
+  ui->historyCombo->setCurrentIndex( 0 );
 }
 
 void CommitPad::setApplicationPalette() const

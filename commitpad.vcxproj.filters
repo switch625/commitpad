@@ -72,6 +72,9 @@
     <ClCompile Include="titlebar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="commitmessagehistoryitemmodel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="commitpad.h">
@@ -88,24 +91,12 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    
-    
-    
-    
     <CustomBuild Include="debug\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
     <CustomBuild Include="release\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
-    
-    
-    
-    
-    
-    
-    
-    
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="commitpad.ui">
@@ -148,5 +139,13 @@
     <None Include="TODO">
       <Filter>Distribution Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="commitmessagehistorymodelinterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="commitmessagehistoryitemmodel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -70,7 +70,7 @@
     <QtModules>core;gui;widgets;winextras</QtModules>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <QtInstall>5.15.5_msvc2019</QtInstall>
+    <QtInstall>5.15.5-widgit</QtInstall>
     <QtModules>core;gui;widgets;winextras</QtModules>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
@@ -201,6 +201,7 @@
     </QtUic>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="commitmessagehistoryitemmodel.cpp" />
     <ClCompile Include="commitpad.cpp" />
     <ClCompile Include="commitsyntaxhighlighter.cpp" />
     <ClCompile Include="main.cpp" />
@@ -255,6 +256,10 @@
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="TODO" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="commitmessagehistorymodelinterface.h" />
+    <ClInclude Include="commitmessagehistoryitemmodel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
