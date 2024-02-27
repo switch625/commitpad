@@ -1,11 +1,16 @@
 #include "commitpad.h"
 #include <QApplication>
 #include <QSettings>
+#include <QStandardPaths>
 
 int main(int argc, char *argv[])
 {
   QApplication a(argc, argv);
-  QSettings settings( "./CommitPad.ini", QSettings::IniFormat );
+
+  QString settingsFileLocation = QStandardPaths::writableLocation( QStandardPaths::AppDataLocation );
+  settingsFileLocation += "/commitpad.ini";
+
+  QSettings settings( settingsFileLocation, QSettings::IniFormat );
 
   CommitPad w( settings );
 
